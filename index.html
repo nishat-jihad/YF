@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your Future</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+<header class="hd"><div class="wrap hdin">
+<button class="burger" data-a="menu" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+<a class="brand" href="#/home"><svg width="30" height="30" viewBox="0 0 28 28" aria-hidden="true"><rect width="28" height="28" rx="8" fill="#1a73e8"/><path d="M8 18l6-9 6 9" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Your Future</a>
+<nav id="nav"></nav>
+<button class="sbclose" data-a="sbtoggle" aria-label="Hide sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button></div></header>
+<button class="sbopen" data-a="sbtoggle" aria-label="Show sidebar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+<div id="fs" hidden><div id="fs-t"></div></div>
+<main class="wrap" id="view"></main>
+<input type="file" id="file" accept=".json" hidden>
+<footer>made by Nishat</footer>
+<script src="src/utils.js"></script>
+<script src="src/store.js"></script>
+<script src="app/app.js"></script>
+<script src="components/home.js"></script>
+<script src="components/daily.js"></script>
+<script src="components/routine.js"></script>
+<script src="components/timer.js"></script>
+<script src="components/stats.js"></script>
+<script src="components/classes.js"></script>
+<script src="components/syllabus.js"></script>
+<script src="components/settings.js"></script>
+</body>
+</html>
