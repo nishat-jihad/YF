@@ -11,6 +11,7 @@ const DP=['#93c5fd','#86efac','#c4b5fd','#fcd34d','#f9a8d4','#fdba74','#67e8f9']
 const DN=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const WEEK=[6,0,1,2,3,4,5];
 const H=s=>(s/3600).toFixed(1);
+const dm=s=>{const m=Math.round(s/60);if(m<1)return'<1 min';const h=Math.floor(m/60),r=m%60;return h?h+' h'+(r?' '+r+' min':''):r+' min'};
 const clock=s=>{s=Math.max(0,Math.floor(s));return pad(Math.floor(s/3600))+':'+pad(Math.floor(s%3600/60))+':'+pad(s%60)};
 const opts=(a,v)=>a.map(o=>`<option ${o===v?'selected':''}>${o}</option>`).join('');
 const t12=t=>{const[h,m]=String(t||'00:00').split(':').map(Number);return(h%12||12)+':'+pad(m)+' '+(h>=12?'PM':'AM')};
