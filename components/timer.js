@@ -45,7 +45,7 @@ ${self?`<div class="card big"><div class="seg"><button class="${p?'':'on'}" data
 
 ${p?`<div class="row c" style="margin-top:0"><button class="chip ${s.w==25?'on':''}" data-a="tpre" data-w="25" data-b="5">25 / 5</button><button class="chip ${s.w==45?'on':''}" data-a="tpre" data-w="45" data-b="10">45 / 10</button><button class="chip ${s.w==50?'on':''}" data-a="tpre" data-w="50" data-b="10">50 / 10</button><span class="lab">Completed: ${s.done}</span></div>`:''}</div><div class="tc">${ctl}</div>`
 :`<div class="card big" style="max-width:600px;margin:0 auto"><div class="lab">Class Timer</div><div class="midtime" id="t-cls">${clock(el(c))}</div></div><div class="tc">${ctl}</div>`}
-<h2>আজকের সেশন · ${dm(sumDay(dkey()))}</h2>
+<div class="ph" style="margin:30px 0 12px"><h2 style="margin:0">আজকের সেশন · ${dm(sumDay(dkey()))}</h2><button class="btn ghost sm" data-a="tmanual">Add missed time</button></div>
 ${td.length?`<div class="card tbl"><table><tr><th>Subject</th><th>Chapter</th><th>Type</th><th>Time</th></tr>${td.slice().reverse().map(x=>`<tr><td><i class="dot" style="background:${SC[x.sub]||SC.Other}"></i>${esc(x.sub)}</td><td class="wr">${esc(x.ch||'—')}</td><td>${x.type==='cls'?'Class':'Self Study'}</td><td>${dm(x.sec)}</td></tr>`).join('')}</table></div>`:'<p class="empty">আজ এখনো কোনো সেশন সেভ হয়নি।</p>'}`}};
 A.tview=d=>{T.v=d.v;go()};
 A.tmode=d=>{const s=T.self;if(s.mode!==d.m){s.mode=d.m;s.acc=0;s.st=0;s.ph='work';go()}};
@@ -57,3 +57,7 @@ A.treset=d=>{const t=T[d.t];if(el(t)>10&&!confirm('Reset timer? This session wil
 A.tsave=d=>{const t=T[d.t],sec=el(t),brk=d.t==='self'&&t.mode==='pom'&&t.ph!=='work';
 if(!brk&&sec>=10)addSession(sec,t.sub,d.t,t.ch);t.acc=0;t.st=0;if(d.t==='self')t.ph='work';go()};
 A.fstheme=d=>{S.settings.fsDark=d.v==='dark';save();go()};
+A.tmanual=()=>{if(S.locked[dkey()]){toast('আজকের দিন পাকাপাকিভাবে সেভ করা, সময় যোগ করা যাবে না');return}
+modal('Add missed time (today)',[{k:'type',l:'Type',o:['Self Study','Class']},{k:'sub',l:'Subject',o:SUBJ,v:T.self.sub},{k:'ch',l:'Chapter / topic (optional)',r:0},{k:'h',l:'Hours',t:'number',v:1},{k:'m',l:'Minutes',t:'number',v:0}],v=>{
+const sec=(Math.max(0,+v.h)*60+Math.max(0,+v.m))*60;if(sec<60||sec>86400){toast('সময় ঠিকমতো দাও (১ মিনিট থেকে ২৪ ঘণ্টার মধ্যে)');return}
+addSession(sec,v.sub,v.type==='Class'?'cls':'self',(v.ch||'').trim());go()})};
