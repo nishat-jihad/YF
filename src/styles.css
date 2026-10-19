@@ -191,3 +191,5 @@ tr.done .tk{text-decoration:line-through}
 .lgb{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;background:#fff;border:1px solid var(--bd);border-radius:12px;padding:12px 16px;font:inherit;font-size:14.5px;font-weight:600;color:var(--tx);cursor:pointer;text-align:left}
 .lgb:hover{background:#f9fafb}
 .lgb.on{border-color:var(--ac);background:var(--bl);color:var(--ac)}
+.tc{margin-top:4px}
+.tc select,.tc input{width:auto}
