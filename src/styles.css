@@ -193,3 +193,21 @@ tr.done .tk{text-decoration:line-through}
 .lgb.on{border-color:var(--ac);background:var(--bl);color:var(--ac)}
 .tc{margin-top:4px}
 .tc select,.tc input{width:auto}
+.fm{margin:0 0 14px}
+.fm select,.fm input{width:auto}
+.fm input{min-width:240px}
+.tc .row{flex-wrap:nowrap;gap:8px;justify-content:center}
+.tc .btn{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;min-width:0}
+.tc .btn.lg{height:44px;padding:0 20px;font-size:15px}
+.tc .btn.ico{padding:0;width:44px;flex:none}
+.tc .seg{flex:none}
+.tc .seg button{display:grid;place-items:center;width:34px;height:32px;padding:0}
+.tc .seg svg{width:18px;height:18px}
+@media(max-width:560px){
+.tc .row{gap:6px}
+.tc .btn.lg{height:38px;padding:0 9px;font-size:12.5px}
+.tc .btn.ico{width:38px}
+.tc .btn.ico svg{width:19px;height:19px}
+.tc .seg button{width:28px;height:28px}
+.tc .seg svg{width:16px;height:16px}
+}
