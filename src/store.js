@@ -1,9 +1,9 @@
 const KEY='yourfuture.v1';
 const DEF=()=>({exams:[{id:'a',name:'Dhaka University',date:'2026-12-12'},{id:'b',name:'CU',date:'2027-01-30'},{id:'c',name:'GST',date:'2027-03-27'}],
-routine:{0:[],1:[],2:[],3:[],4:[],5:[],6:[]},days:{},targets:{},sessions:[],classes:Object.fromEntries(SUBJ.map(x=>[x,[]])),syllabus:Object.fromEntries(SUBJ.map(x=>[x,[]])),settings:{goal:4,layout:'top',sbc:false}});
+routine:{0:[],1:[],2:[],3:[],4:[],5:[],6:[]},days:{},targets:{},locked:{},sessions:[],classes:Object.fromEntries(SUBJ.map(x=>[x,[]])),syllabus:Object.fromEntries(SUBJ.map(x=>[x,[]])),settings:{goal:4,layout:'top',sbc:false}});
 let S;try{S={...DEF(),...JSON.parse(localStorage.getItem(KEY))}}catch(e){S=DEF()}
 S.settings={...DEF().settings,...S.settings};
-function fixAll(){if(!S.targets||typeof S.targets!=='object')S.targets={};if(!S.classes||typeof S.classes!=='object')S.classes={};if(!S.syllabus||typeof S.syllabus!=='object')S.syllabus={};
+function fixAll(){if(!S.targets||typeof S.targets!=='object')S.targets={};if(!S.locked||typeof S.locked!=='object')S.locked={};if(!S.classes||typeof S.classes!=='object')S.classes={};if(!S.syllabus||typeof S.syllabus!=='object')S.syllabus={};
 SUBJ.forEach(s=>{let v=S.classes[s];if(!Array.isArray(v))v=v>0?[{id:uid(),name:'General',n:+v}]:[];
 S.classes[s]=v.map(x=>x.total==null?{id:x.id,name:x.name,total:+x.n||0,done:0}:x);
 let y=S.syllabus[s];if(!Array.isArray(y))y=[];
