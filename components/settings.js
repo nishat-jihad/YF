@@ -14,7 +14,7 @@ return`<div class="ph"><div><h1>Settings</h1><p class="sub">পরীক্ষ�
 init(){$('#file').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
 f.text().then(t=>{try{const j=JSON.parse(t);if(j.app!=='yourfuture'||!j.data)throw 0;
 if(!confirm('Import will replace the matching data. Continue?'))return;
-['exams','routine','classes','syllabus','settings','days','sessions','targets'].forEach(k=>{if(j.data[k]!==undefined)S[k]=j.data[k]});
+['exams','routine','classes','syllabus','settings','days','sessions','targets','locked'].forEach(k=>{if(j.data[k]!==undefined)S[k]=j.data[k]});
 S.settings={...DEF().settings,...S.settings};fixAll();save();toast('Imported');go()}catch(x){toast('Invalid backup file')}})}}};
 const EF=(v={})=>[{k:'name',l:'University',v:v.name},{k:'date',l:'Exam date',t:'date',v:v.date}];
 A.goal=v=>{S.settings.goal=Math.max(.5,+v||4);save()};
@@ -22,7 +22,7 @@ A.eadd=()=>modal('Add exam',EF(),v=>{S.exams.push({id:uid(),...v});save();go()})
 A.eedit=d=>{const e=S.exams.find(x=>x.id===d.id);modal('Edit exam',EF(e),v=>{Object.assign(e,v);save();go()})};
 A.edel=d=>{S.exams=S.exams.filter(x=>x.id!==d.id);save();go()};
 A.xall=()=>download('yourfuture-full-'+dkey()+'.json',{app:'yourfuture',v:1,data:S});
-A.xsetup=()=>{const{days,sessions,targets,...d}=S;download('yourfuture-setup-'+dkey()+'.json',{app:'yourfuture',v:1,data:d})};
+A.xsetup=()=>{const{days,sessions,targets,locked,...d}=S;download('yourfuture-setup-'+dkey()+'.json',{app:'yourfuture',v:1,data:d})};
 A.imp=()=>$('#file').click();
 A.delstats=()=>{if(confirm('Delete all study statistics? This cannot be undone.')){S.sessions=[];save();toast('Statistics deleted');go()}};
 A.layout=d=>{S.settings.layout=d.v;save();go()};
