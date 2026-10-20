@@ -12,3 +12,6 @@ document.addEventListener('change',e=>{const el=e.target.closest('[data-c]');if(
 A.menu=()=>document.body.classList.toggle('menu');
 A.sbtoggle=()=>{S.settings.sbc=!S.settings.sbc;save();layout()};
 setInterval(()=>{if(cur==='home')go()},30000);
+if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol)){const had=!!navigator.serviceWorker.controller;
+navigator.serviceWorker.register('sw.js').catch(()=>{});
+navigator.serviceWorker.addEventListener('controllerchange',()=>{if(had)toast('নতুন ভার্সন এসেছে, পেজ রিফ্রেশ করো')})}
