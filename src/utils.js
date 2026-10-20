@@ -11,7 +11,8 @@ const DP=['#93c5fd','#86efac','#c4b5fd','#fcd34d','#f9a8d4','#fdba74','#67e8f9']
 const DN=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const WEEK=[6,0,1,2,3,4,5];
 const H=s=>(s/3600).toFixed(1);
-const dm=s=>{const m=Math.round(s/60);if(m<1)return'<1 min';const h=Math.floor(m/60),r=m%60;return h?h+' h'+(r?' '+r+' min':''):r+' min'};
+const dm=s=>{const m=Math.round(s/60);if(m<1)return s>0?'<1 min':'0 min';const h=Math.floor(m/60),r=m%60;return h?h+' h'+(r?' '+r+' min':''):r+' min'};
+const dh=s=>{const m=Math.round(s/60),h=Math.floor(m/60),r=m%60;return h?h+'h'+(r?' '+r+'m':''):r+'m'};
 const clock=s=>{s=Math.max(0,Math.floor(s));return pad(Math.floor(s/3600))+':'+pad(Math.floor(s%3600/60))+':'+pad(s%60)};
 const opts=(a,v)=>a.map(o=>`<option ${o===v?'selected':''}>${o}</option>`).join('');
 const t12=t=>{const[h,m]=String(t||'00:00').split(':').map(Number);return(h%12||12)+':'+pad(m)+' '+(h>=12?'PM':'AM')};
@@ -36,7 +37,7 @@ d.innerHTML=`<form method="dialog"><h3>${title}</h3>${fs.map(fld).join('')}<div 
 document.body.append(d);d.showModal();
 d.onclose=()=>{if(d.returnValue==='ok'){const o=Object.fromEntries(new FormData($('form',d)));
 fs.forEach(f=>{if(f.t==='time'){let h=+o[f.k+'_h']%12;if(o[f.k+'_p']==='PM')h+=12;o[f.k]=pad(h)+':'+o[f.k+'_m']}});cb(o)}d.remove()}}
-function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.append(t);setTimeout(()=>t.remove(),2200)}
+function toast(m,u){document.querySelectorAll('.toast').forEach(x=>x.remove());const t=document.createElement('div');t.className='toast';t.textContent=m;if(u){const b=document.createElement('button');b.className='tundo';b.textContent='Undo';b.onclick=()=>{t.remove();u()};t.append(b)}document.body.append(t);setTimeout(()=>t.remove(),u?7000:2200)}
 function beep(){try{const c=new AudioContext(),o=c.createOscillator();o.connect(c.destination);o.frequency.value=880;o.start();setTimeout(()=>{o.stop();c.close()},450)}catch(e){}}
 function download(name,obj){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(obj,null,1)],{type:'application/json'}));a.download=name;a.click()}
 function ttable(l,pf,ex,o={}){l=l.slice().sort((a,b)=>(a.start||'').localeCompare(b.start||''));
@@ -45,9 +46,9 @@ const cn={};
 const rows=l.map(x=>{const ty=x.type||'Self Study',n=cn[ty]=(cn[ty]||0)+1,lab=ty+' '+pad(n),id=esc(x.id),
 tag=`<span class="tag ${ty==='Class'?'cls':'slf'}">${esc(ty)}</span>`,tm=`<td class="tm">${t12(x.start)} – ${t12(x.end)}</td>`,
 act=`<td class="ac">${o.chk?`<button class="lnk g" data-a="${pf}start" ${ex} data-id="${id}">Start</button>`:''}<button class="lnk" data-a="${pf}edit" ${ex} data-id="${id}">Edit</button><button class="lnk red" data-a="${pf}del" ${ex} data-id="${id}">Delete</button></td>`;
-if(o.slot)return`<tr>${tm}<td>${tag}</td><td class="wr"><b>${lab}</b>${x.what?' · '+esc(x.what):''}</td><td>${esc(x.target)}h</td>${act}</tr>`;
+if(o.slot)return`<tr>${tm}<td class="ty">${tag}</td><td class="wr"><b>${lab}</b>${x.what?' · '+esc(x.what):''}</td><td class="tg">${esc(x.target)}h</td>${act}</tr>`;
 const st=o.chk?`<button class="chk" data-a="${pf}tog" ${ex} data-id="${id}" aria-label="Toggle done">${x.done?'✓':''}</button>`:`<span class="tag ${x.done?'ok':'pen'}">${x.done?'Done':'Pending'}</span>`;
 const task=x.what?`${x.sub&&x.sub!=='Other'?`<b>${esc(x.sub)}</b> · `:''}${esc(x.what)}`:`<b>${lab}</b> <span class="lab">· কী পড়বে Edit দিয়ে বসাও</span>`;
-return`<tr class="${x.done?'done':''}"><td class="st">${st}</td>${tm}<td>${tag}</td><td class="wr tk">${task}</td><td>${esc(x.target)}h</td>${o.ro?'':act}</tr>`}).join('');
+return`<tr class="${x.done?'done':''}"><td class="st">${st}</td>${tm}<td class="ty">${tag}</td><td class="wr tk">${task}</td><td class="tg">${esc(x.target)}h</td>${o.ro?'':act}</tr>`}).join('');
 const head=o.slot?'<th>Time</th><th>Type</th><th>Slot</th><th>Hours</th><th></th>':`<th class="st">Status</th><th>Time</th><th>Type</th><th>Task</th><th>Target</th>${o.ro?'':'<th></th>'}`;
 return`<div class="card tbl"><table class="tt"><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>`}
