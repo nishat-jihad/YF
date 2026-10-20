@@ -12,5 +12,5 @@ const yf=id=>S.syllabus[Y.s].find(x=>x.id===id);
 A.ytab=d=>{Y.s=d.s;go()};
 A.yadd=()=>modal('Add chapters – '+Y.s,[{k:'t',l:'Chapter names (এক লাইনে একটা)',t:'area'}],v=>{v.t.split(/\r?\n/).map(x=>x.trim()).filter(Boolean).forEach(n=>S.syllabus[Y.s].push({id:uid(),name:n,c:0,s:0,p:0,r:0}));save();go()});
 A.yedit=d=>{const c=yf(d.id);modal('Edit chapter',[{k:'name',l:'Chapter',v:c.name}],v=>{c.name=v.name;save();go()})};
-A.ydel=d=>{S.syllabus[Y.s]=S.syllabus[Y.s].filter(x=>x.id!==d.id);save();go()};
+A.ydel=d=>undoable('Chapter deleted',()=>{S.syllabus[Y.s]=S.syllabus[Y.s].filter(x=>x.id!==d.id)});
 A.ytog=d=>{const c=yf(d.id);c[d.k]=c[d.k]?0:1;save();go()};

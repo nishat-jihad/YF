@@ -11,6 +11,6 @@ const kf=id=>S.classes[K.s].find(x=>x.id===id);
 A.ktab=d=>{K.s=d.s;go()};
 A.kadd=()=>modal('Add chapter – '+K.s,CF(),v=>{S.classes[K.s].push({id:uid(),...cl_(v)});save();go()});
 A.kedit=d=>{const c=kf(d.id);modal('Edit chapter',CF(c),v=>{Object.assign(c,cl_(v));save();go()})};
-A.kdel=d=>{S.classes[K.s]=S.classes[K.s].filter(x=>x.id!==d.id);save();go()};
+A.kdel=d=>undoable('Chapter deleted',()=>{S.classes[K.s]=S.classes[K.s].filter(x=>x.id!==d.id)});
 A.kinc=d=>{const c=kf(d.id);c.done=Math.min(c.total,c.done+1);save();go()};
 A.kdec=d=>{const c=kf(d.id);c.done=Math.max(0,c.done-1);save();go()};

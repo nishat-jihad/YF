@@ -5,7 +5,7 @@ return`<div class="ph"><div><h1>Settings</h1><p class="sub">পরীক্ষ�
 <h2>Exams</h2><div class="list">${ex.map(e=>`<div class="item"><div class="grow"><div class="t">${esc(e.name)}</div><div class="m">${esc(e.date)}</div></div><button class="lnk" data-a="eedit" data-id="${esc(e.id)}">Edit</button><button class="lnk red" data-a="edel" data-id="${esc(e.id)}">Delete</button></div>`).join('')}</div>
 <div class="row" style="margin-top:14px"><button class="btn" data-a="eadd">Add exam</button></div>
 <div class="sh"><span class="it sm">${IC.db}</span><h2>Backup &amp; Share</h2></div>
-<p class="sub" style="margin-bottom:18px">ডাটা শুধু এই ব্রাউজারে থাকে। JSON ফাইল দিয়ে এক ডিভাইস থেকে আরেকটায় বা বন্ধুর কাছে পাঠাতে পারো।</p>
+<p class="sub" style="margin-bottom:18px">ডাটা শুধু এই ব্রাউজারে থাকে। ${S.settings.lastBackup?'শেষ ব্যাকআপ: '+new Date(S.settings.lastBackup).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})+'।':'এখনো ব্যাকআপ নেওয়া হয়নি।'} JSON ফাইল দিয়ে এক ডিভাইস থেকে আরেকটায় বা বন্ধুর কাছে পাঠাতে পারো।</p>
 <div class="g2"><div class="card pop bkc"><div class="it">${IC.dl}</div><h3>Download Backup</h3><p><b>Export all:</b> সব ডাটা, stats সহ।<br><b>Export setup:</b> শুধু exams, routine, syllabus, classes আর goal। বন্ধুকে দিতে এটা ভালো।</p>
 <button class="btn full" data-a="xall">${IC.dl}Export all</button><button class="btn ghost full" data-a="xsetup">${IC.dl}Export setup</button></div>
 <div class="card pop bkc"><div class="it green">${IC.up}</div><h3>Import Backup</h3><p>আগে Export করা ফাইল দিলে তার সব ডাটা এখানে চলে আসবে। একই নামের বর্তমান ডাটা বদলে যাবে।</p>
@@ -14,15 +14,18 @@ return`<div class="ph"><div><h1>Settings</h1><p class="sub">পরীক্ষ�
 init(){$('#file').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
 f.text().then(t=>{try{const j=JSON.parse(t);if(j.app!=='yourfuture'||!j.data)throw 0;
 if(!confirm('Import will replace the matching data. Continue?'))return;
-['exams','routine','classes','syllabus','settings','days','sessions','targets','locked'].forEach(k=>{if(j.data[k]!==undefined)S[k]=j.data[k]});
-S.settings={...DEF().settings,...S.settings};fixAll();save();toast('Imported');go()}catch(x){toast('Invalid backup file')}})}}};
+const o=sanitize(j.data);if(!Object.keys(o).length)throw 0;
+if(!confirm('Import will replace: '+Object.keys(o).join(', ')+'. Continue?'))return;
+try{localStorage.setItem(KEY+'.preimport',JSON.stringify(S))}catch(e){}
+if(o.settings)o.settings={...S.settings,...o.settings};
+Object.assign(S,o);fixAll();save();toast('Imported');go()}catch(x){toast('Invalid backup file')}})}}};
 const EF=(v={})=>[{k:'name',l:'University',v:v.name},{k:'date',l:'Exam date',t:'date',v:v.date}];
 A.goal=v=>{S.settings.goal=Math.max(.5,+v||4);save()};
 A.eadd=()=>modal('Add exam',EF(),v=>{S.exams.push({id:uid(),...v});save();go()});
 A.eedit=d=>{const e=S.exams.find(x=>x.id===d.id);modal('Edit exam',EF(e),v=>{Object.assign(e,v);save();go()})};
-A.edel=d=>{S.exams=S.exams.filter(x=>x.id!==d.id);save();go()};
-A.xall=()=>download('yourfuture-full-'+dkey()+'.json',{app:'yourfuture',v:1,data:S});
+A.edel=d=>undoable('Exam deleted',()=>{S.exams=S.exams.filter(x=>x.id!==d.id)});
+A.xall=()=>{S.settings.lastBackup=new Date().toISOString();save();download('yourfuture-full-'+dkey()+'.json',{app:'yourfuture',v:1,data:S})};
 A.xsetup=()=>{const{days,sessions,targets,locked,...d}=S;download('yourfuture-setup-'+dkey()+'.json',{app:'yourfuture',v:1,data:d})};
 A.imp=()=>$('#file').click();
-A.delstats=()=>{if(confirm('Delete all study statistics? This cannot be undone.')){S.sessions=[];save();toast('Statistics deleted');go()}};
+A.delstats=()=>{if(confirm('Delete all study statistics? This cannot be undone.')){undoable('Statistics deleted',()=>{S.sessions=[]})}};
 A.layout=d=>{S.settings.layout=d.v;save();go()};
