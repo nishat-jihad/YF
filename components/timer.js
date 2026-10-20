@@ -1,4 +1,9 @@
 const T={v:'self',self:{mode:'sw',acc:0,st:0,sub:'Physics',ph:'work',w:25,b:5,done:0,ch:''},cls:{acc:0,st:0,sub:'Physics',ch:''}};
+const TK='yourfuture.timer';let lastT=0;
+function saveT(){try{localStorage.setItem(TK,JSON.stringify({ts:Date.now(),v:T.v,self:T.self,cls:T.cls}))}catch(e){}}
+try{const r=JSON.parse(localStorage.getItem(TK)||'null');if(r&&r.self&&r.cls){let was=0;
+['self','cls'].forEach(k=>{const t=Object.assign(T[k],r[k]);if(t.st){t.acc=(+t.acc||0)+Math.max(0,(r.ts-t.st)/1000);t.st=0;was=1}});
+T.v=r.v==='cls'?'cls':'self';if(was)setTimeout(()=>toast('টাইমার পজ অবস্থায় ফিরিয়ে আনা হয়েছে'),600)}}catch(e){}
 const el=t=>t.acc+(t.st?(Date.now()-t.st)/1e3:0);
 const sv=()=>{const s=T.self;return s.mode==='pom'?Math.ceil((s.ph==='work'?s.w:s.b)*60-el(s)):el(s)};
 function ticker(f){let ok=0;const fb=()=>setInterval(f,250);try{const w=new Worker(URL.createObjectURL(new Blob(['setInterval(()=>postMessage(0),250)'])));w.onmessage=()=>{ok=1;f()};w.onerror=()=>{if(!ok)fb()};setTimeout(()=>{if(!ok)fb()},1500)}catch(e){fb()}}
@@ -30,6 +35,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeFS()});
 document.addEventListener('click',e=>{const f=$('#fs');if(!f.hidden&&f.dataset.soft==='1'&&f.contains(e.target))closeFS()});
 ticker(()=>{const s=T.self;
 if(s.mode==='pom'&&s.st){const L=(s.ph==='work'?s.w:s.b)*60;if(el(s)>=L){if(s.ph==='work'){addSession(L,s.sub,'self',s.ch);s.done++}s.ph=s.ph==='work'?'break':'work';s.acc=0;s.st=Date.now();beep();if(cur==='timer')go()}}
+if((T.self.st||T.cls.st)&&Date.now()-lastT>2000){lastT=Date.now();saveT()}
 paint()});
 C.timer={render(){const s=T.self,c=T.cls,p=s.mode==='pom',self=T.v==='self',t=self?s:c;
 const chs=[...new Set([...(S.syllabus[t.sub]||[]).map(x=>x.name),...(S.classes[t.sub]||[]).map(x=>x.name)])];
@@ -61,3 +67,5 @@ A.tmanual=()=>{if(S.locked[dkey()]){toast('আজকের দিন পাক�
 modal('Add missed time (today)',[{k:'type',l:'Type',o:['Self Study','Class']},{k:'sub',l:'Subject',o:SUBJ,v:T.self.sub},{k:'ch',l:'Chapter / topic (optional)',r:0},{k:'h',l:'Hours',t:'number',v:1},{k:'m',l:'Minutes',t:'number',v:0}],v=>{
 const sec=(Math.max(0,+v.h)*60+Math.max(0,+v.m))*60;if(sec<60||sec>86400){toast('সময় ঠিকমতো দাও (১ মিনিট থেকে ২৪ ঘণ্টার মধ্যে)');return}
 addSession(sec,v.sub,v.type==='Class'?'cls':'self',(v.ch||'').trim());go()})};
+['tgo','treset','tsave','tmode','tpre','tsub','tch','tview'].forEach(n=>{const f=A[n];A[n]=(...a)=>{f(...a);saveT()}});
+addEventListener('pagehide',saveT);

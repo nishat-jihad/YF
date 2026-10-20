@@ -10,5 +10,5 @@ ${ttable(l,'r','data-d="'+R.d+'"',{slot:1})}`}};
 A.rday=d=>{R.d=+d.d;go()};
 A.radd=()=>modal('Add slot – '+DN[R.d],RF(),v=>{S.routine[R.d].push({id:uid(),type:v.type,start:v.start,end:v.end,target:dur(v.start,v.end)});save();go()});
 A.redit=d=>{const t=S.routine[R.d].find(x=>x.id===d.id);modal('Edit slot',RF(t),v=>{Object.assign(t,{type:v.type,start:v.start,end:v.end,target:dur(v.start,v.end)});save();go()})};
-A.rdel=d=>{S.routine[R.d]=S.routine[R.d].filter(x=>x.id!==d.id);save();go()};
+A.rdel=d=>undoable('Slot deleted',()=>{S.routine[R.d]=S.routine[R.d].filter(x=>x.id!==d.id)});
 A.rcopy=()=>{if(confirm('Copy '+DN[R.d]+' routine to all other days? Their current routine will be replaced.')){const src=S.routine[R.d];WEEK.forEach(i=>{if(i!==R.d)S.routine[i]=src.map(x=>({...x,id:uid()}))});save();go()}};
