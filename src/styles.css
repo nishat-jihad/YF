@@ -237,3 +237,14 @@ tr.done .tk{text-decoration:line-through}
 .tt td.tg{grid-column:3;grid-row:2;justify-self:end;color:var(--mu)}
 .tt td.ac{grid-column:1/4;grid-row:3;text-align:right;margin-top:4px}
 }
+
+.calc{background:#f0f9ff;border:1px solid #bae6fd;color:#075985;border-radius:10px;padding:9px 12px;font-weight:700;font-size:15px}
+.calc.bad{background:#fef2f2;border-color:#fecaca;color:#b91c1c;font-weight:500;font-size:13.5px}
+dialog .btn:disabled{opacity:.4;cursor:not-allowed}
+.yax{position:relative;width:34px;height:190px;flex:none}
+.yax span{position:absolute;right:6px;transform:translateY(50%);font-size:11px;color:var(--mu);line-height:1}
+.gr{position:absolute;left:0;right:0;border-top:1px solid #eceff3}
+.cbar{background:none;border-radius:0}
+.stk{display:flex;flex-direction:column-reverse;height:100%;overflow:hidden;border-radius:8px 8px 3px 3px}
+.stk i{display:block;width:100%;flex:none}
+.leg{display:flex;gap:6px 16px;flex-wrap:wrap;justify-content:center;margin-top:14px;font-size:13px;color:var(--mu)}
