@@ -5,7 +5,7 @@ const dkey=d=>{d=d||new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-
 const pd=k=>new Date(k+'T00:00:00');
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const SUBJ=['Physics','Chemistry','Biology','Math','English'];
-const SC={Physics:'#ef4444',Chemistry:'#f97316',Biology:'#8b5cf6',Math:'#22c55e',English:'#3b82f6',Other:'#9ca3af'};
+const SC={Physics:'#ef4444',Chemistry:'#f97316',Biology:'#d946ef',Math:'#22c55e',English:'#3b82f6',Other:'#9ca3af'};
 const PC=SC;
 const DP=['#93c5fd','#86efac','#c4b5fd','#fcd34d','#f9a8d4','#fdba74','#67e8f9'];
 const DN=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
@@ -26,7 +26,7 @@ const add=k=>new Date(n.getFullYear(),n.getMonth()+k,n.getDate(),n.getHours(),n.
 if(add(m)>t)m--;const r=t-add(m);
 return{m,d:Math.floor(r/864e5),h:Math.floor(r%864e5/36e5),total:Math.floor((t-n)/864e5)}}
 function fld(f){const n=f.k;let c;
-if(f.t==='time'){const[h,m]=String(f.v||'07:00').split(':').map(Number),ms=[...Array(60).keys()];
+if(f.t==='time'){const[h,m]=String(f.v||'07:00').split(':').map(Number),ms=[...Array(12)].map((_,i)=>i*5);if(!ms.includes(m))ms.push(m),ms.sort((a,b)=>a-b);
 c=`<div class="tp"><select name="${n}_h" aria-label="Hour">${[...Array(12)].map((_,i)=>`<option ${i+1===(h%12||12)?'selected':''}>${i+1}</option>`).join('')}</select><select name="${n}_m" aria-label="Minute">${ms.map(v=>`<option ${v===m?'selected':''}>${pad(v)}</option>`).join('')}</select><select name="${n}_p" aria-label="AM or PM">${opts(['AM','PM'],h>=12?'PM':'AM')}</select></div>`}
 else if(f.t==='calc')c='<div class="calc">—</div>';
 else if(f.o)c=`<select name="${n}">${opts(f.o,f.v)}</select>`;

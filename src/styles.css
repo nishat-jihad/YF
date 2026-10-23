@@ -248,3 +248,9 @@ dialog .btn:disabled{opacity:.4;cursor:not-allowed}
 .stk{display:flex;flex-direction:column-reverse;height:100%;overflow:hidden;border-radius:8px 8px 3px 3px}
 .stk i{display:block;width:100%;flex:none}
 .leg{display:flex;gap:6px 16px;flex-wrap:wrap;justify-content:center;margin-top:14px;font-size:13px;color:var(--mu)}
+/* no shadow under the navbar */
+.hd,body.side .hd{box-shadow:none}
+.hd{border-bottom:1px solid rgba(17,24,39,.08)}
+/* table heads: bolder, bigger, own colour (different from page and rows) */
+table th,.tt th,.tbl th{background:#e3edff;color:#1e3a8a;font-weight:700;font-size:14px;border-bottom:1px solid #c5d6f5}
+@media(max-width:700px){table th,.tt th,.tbl th{font-size:13.5px}}
