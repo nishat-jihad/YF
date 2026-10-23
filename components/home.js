@@ -10,7 +10,7 @@ return`${bk}<section class="hero"><div><h1>লক্ষ্য ঠিক রা�
 <p class="sub">${nx?`${esc(nx.name)} পরীক্ষার আর <b>${L.total}</b> দিন বাকি। আজকের পড়াটা শুরু করে ফেলো।`:'Settings থেকে পরীক্ষার তারিখ যোগ করো।'}</p>
 <a class="btn lg" href="#/timer">Start studying</a></div>
 <div class="count">${nx?`<div class="lab">${esc(nx.name)}</div><div class="cn">${L.total}</div><div class="lab">দিন বাকি</div>${up.length>1?`<div class="cmini">${up.slice(1).map(e=>`<div><span>${esc(e.name)}</span><b>${left(e.date).total} দিন বাকি</b></div>`).join('')}</div>`:''}`:`<div class="lab">কোনো পরীক্ষা যোগ করা নেই</div><a class="btn ghost sm" href="#/settings" style="margin-top:12px">Add exam</a>`}</div></section>
-<div class="g3"><div class="card"><div class="k">আজকের পড়া · টার্গেট ${g} ঘণ্টা</div><div class="n">${dm(t)}</div><div class="prog"><i style="width:${g?Math.min(100,t/(g*3600)*100):0}%"></i></div></div>
+<div class="g3"><div class="card"><div class="k">আজকের পড়া · টার্গেট ${dm(g*3600)}</div><div class="n">${dm(t)}</div><div class="prog"><i style="width:${g?Math.min(100,t/(g*3600)*100):0}%"></i></div></div>
 <div class="card"><div class="k">Study streak</div><div class="n">${streak()} দিন</div><div class="k">প্রতিদিনের টার্গেট পূরণ করলে বাড়ে</div></div>
 <div class="card"><div class="k">আজকের টাস্ক</div><div class="n">${dn} / ${tk.length}</div><a class="lnk" href="#/daily">Open tracker</a></div></div>
 <h2>Exam Countdown</h2><div class="card tbl"><table><tr><th>University</th><th>Exam date</th><th>Time remaining</th></tr>${rows||'<tr><td colspan="3">কোনো পরীক্ষা যোগ করা হয়নি।</td></tr>'}</table></div>

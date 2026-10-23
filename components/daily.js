@@ -6,15 +6,15 @@ return`<button class="dc ${kk===k?'on':''} ${kk===t0?'t':''}" data-a="dgo" data-
 return`<div class="ph"><div><h1>Daily Tracker</h1><p class="sub">${pd(k).toLocaleDateString('bn-BD',{weekday:'long',day:'numeric',month:'long',year:'numeric'})} · <span class="tag ${k===t0?'slf':'cls'}">${dlbl(k)}</span></p></div>
 <div class="row"><button class="btn ghost sm" data-a="dshift" data-n="-1" aria-label="Previous day">‹</button><input type="date" value="${k}" data-c="dpick" style="width:auto" aria-label="Pick date"><button class="btn ghost sm" data-a="dshift" data-n="1" aria-label="Next day">›</button><button class="btn ghost sm" data-a="dgo" data-k="${t0}">Today</button></div></div>
 <div class="strip">${strip}</div>
-<div class="g3" style="margin:16px 0"><div class="card"><div class="k">এই দিনের টার্গেট ${lk?'':'<button class="lnk" data-a="dtarget">Set</button>'}</div><div class="n">${g} ঘণ্টা</div><div class="prog"><i style="width:${g?Math.min(100,st/(g*3600)*100):0}%"></i></div><div class="k" style="margin-top:6px">${dm(st)} পড়া হয়েছে</div></div>
+<div class="g3" style="margin:16px 0"><div class="card"><div class="k">এই দিনের টার্গেট ${lk?'':'<button class="lnk" data-a="dtarget">Set</button>'}</div><div class="n">${dm(g*3600)}</div><div class="prog"><i style="width:${g?Math.min(100,st/(g*3600)*100):0}%"></i></div><div class="k" style="margin-top:6px">${dm(st)} পড়া হয়েছে</div></div>
 <div class="card"><div class="k">টাস্ক সম্পন্ন</div><div class="n">${dn} / ${tk.length}</div><div class="prog"><i style="width:${tk.length?dn/tk.length*100:0}%;background:var(--ok)"></i></div></div>
-<div class="card"><div class="k">টাস্কের মোট সময়</div><div class="n">${plan} ঘণ্টা</div></div></div>
+<div class="card"><div class="k">টাস্কের মোট সময়</div><div class="n">${dm(plan*3600)}</div></div></div>
 <div class="row" style="margin-bottom:14px">${lk?'<span class="tag ok">Saved permanently</span><span class="lab">এই দিনের তথ্য আর বদলানো যাবে না।</span>':`<button class="btn" data-a="dadd">Add task</button><button class="btn ghost" data-a="dreload">Load from routine</button>${k<=t0?'<button class="btn green" data-a="dlock">Save day permanently</button>':''}`}</div>
 ${ttable(tk,'d','data-k="'+k+'"',lk?{ro:1}:{chk:1})}`}};
 A.dgo=d=>{D.k=d.k;go()};
 A.dpick=v=>{if(v){D.k=v;go()}};
 A.dshift=d=>{const x=pd(D.k);x.setDate(x.getDate()+ +d.n);D.k=dkey(x);go()};
-A.dtarget=()=>lockd()||modal('Target for '+D.k,[{k:'h',l:'Study target (hours)',t:'number',v:targetOf(D.k)}],v=>{S.targets[D.k]=Math.max(0,+v.h);save();go()});
+A.dtarget=()=>lockd()||modal('Target for '+D.k,[{k:'h',l:'Hours',t:'number',v:Math.floor(targetOf(D.k))},{k:'m',l:'Minutes',t:'number',v:Math.round((targetOf(D.k)%1)*60)}],v=>{S.targets[D.k]=Math.max(0,+v.h)+Math.min(59,Math.max(0,+v.m))/60;save();go()});
 A.dadd=()=>lockd()||modal('Add task',TF(),v=>{mutDay(D.k).push({id:uid(),...v,done:false});save();go()});
 A.dedit=d=>{if(lockd())return;const t=mutDay(D.k).find(x=>x.id===d.id);modal('Edit task',TF(t),v=>{Object.assign(t,v);save();go()})};
 A.ddel=d=>{if(lockd())return;undoable('Task deleted',()=>{S.days[D.k]=mutDay(D.k).filter(x=>x.id!==d.id)})};

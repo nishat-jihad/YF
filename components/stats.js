@@ -5,7 +5,11 @@ const rng=off=>[...Array(7)].map((_,i)=>{const d=new Date(n);d.setDate(n.getDate
 const days=rng(0),keys=days.map(dkey),pk=rng(-7).map(dkey),tk=dkey();
 const vals=keys.map(sumDay),tg=keys.map(k=>targetOf(k)*3600),tot=vals.reduce((a,b)=>a+b,0);
 const prev=S.sessions.filter(x=>pk.includes(x.date)).reduce((a,x)=>a+x.sec,0);
-const mx=Math.max(...vals,...tg,3600),bi=vals.indexOf(Math.max(...vals));
+const bi=vals.indexOf(Math.max(...vals));
+const M=Math.max(1,Math.ceil(Math.max(...vals,...tg)/3600)),step=[1,2,4,5,10].find(q=>M/q<=5)||20,AH=Math.ceil(M/step)*step,mx=AH*3600;
+const ticks=[];for(let t=0;t<=AH;t+=step)ticks.push(t);
+const ORD=[...SUBJ,'Other'];
+const seg=keys.map(k=>{const o={};S.sessions.forEach(x=>{if(x.date===k){const q=ORD.includes(x.sub)?x.sub:'Other';o[q]=(o[q]||0)+x.sec}});return o});
 const sub=SUBJ.map(s=>[s,S.sessions.filter(x=>keys.includes(x.date)&&x.sub===s).reduce((a,x)=>a+x.sec,0)]);
 const sm=Math.max(...sub.map(x=>x[1]),1),diff=tot-prev;
 const f=d=>d.toLocaleDateString('en-GB',{day:'numeric',month:'short'});
@@ -14,9 +18,10 @@ for(let w=11;w>=0;w--)for(let i=0;i<7;i++){const d=new Date(ws);d.setDate(ws.get
 cells.push(`<i class="hc" style="background:${d>new Date()?'transparent':!s?'#e5e7eb':r<.5?'#bfdbfe':r<1?'#60a5fa':'#2563eb'}" title="${k}: ${dh(s)}"></i>`)}
 const byd={};S.sessions.forEach(x=>(byd[x.date]=byd[x.date]||[]).push(x));
 const dts=Object.keys(byd).sort().reverse(),shown=LG.all?dts:dts.slice(0,14);
-return`<div class="ph"><div><h1>Statistics</h1><p class="sub">দিন বনাম পড়ার ঘণ্টা · ডটেড দাগ = সেই দিনের টার্গেট</p></div>
+return`<div class="ph"><div><h1>Statistics</h1><p class="sub">দিন বনাম পড়ার ঘণ্টা, রঙ = বিষয় · ডটেড দাগ = সেই দিনের টার্গেট</p></div>
 <div class="row"><button class="btn ghost sm" data-a="wk" data-o="-1">‹ Prev</button><b>${f(days[0])} – ${f(days[6])}</b><button class="btn ghost sm" data-a="wk" data-o="1" ${W.o>=0?'disabled':''}>Next ›</button></div></div>
-<div class="card"><div class="plot">${days.map((d,i)=>`<div class="col ${keys[i]===tk?'t':''}"><div class="bw"><div class="gl" style="bottom:${tg[i]/mx*100}%"></div><div class="cbar" style="height:${vals[i]/mx*100}%;background:${DP[i]}">${vals[i]?`<span>${dh(vals[i])}</span>`:''}</div></div><div style="padding-top:6px">${DN[d.getDay()].slice(0,3)}</div></div>`).join('')}</div></div>
+<div class="card"><div class="plot"><div class="yax">${ticks.map(t=>`<span style="bottom:${t/AH*100}%">${t}h</span>`).join('')}</div>${days.map((d,i)=>`<div class="col ${keys[i]===tk?'t':''}"><div class="bw">${ticks.slice(1).map(t=>`<i class="gr" style="bottom:${t/AH*100}%"></i>`).join('')}<div class="gl" style="bottom:${tg[i]/mx*100}%"></div><div class="cbar" style="height:${vals[i]/mx*100}%"><div class="stk">${ORD.filter(q=>seg[i][q]).map(q=>`<i style="height:${seg[i][q]/vals[i]*100}%;background:${SC[q]}" title="${q}: ${dh(seg[i][q])}"></i>`).join('')}</div>${vals[i]?`<span>${dh(vals[i])}</span>`:''}</div></div><div style="padding-top:6px">${DN[d.getDay()].slice(0,3)}</div></div>`).join('')}</div>
+<div class="leg">${ORD.map(q=>`<span><i class="dot" style="background:${SC[q]}"></i>${q}</span>`).join('')}</div></div>
 <div class="g3" style="margin-top:16px"><div class="card"><div class="k">এই সপ্তাহে মোট</div><div class="n">${dm(tot)}</div></div>
 <div class="card"><div class="k">আগের সপ্তাহের সাথে</div><div class="n" style="color:${diff>=0?'var(--ok)':'var(--rd)'}">${diff>=0?'+':'−'}${dm(Math.abs(diff))}</div></div>
 <div class="card"><div class="k">সেরা দিন</div><div class="n">${tot?DN[days[bi].getDay()]:'—'}</div></div></div>
